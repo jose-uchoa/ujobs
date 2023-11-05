@@ -162,6 +162,3 @@ cython_debug/
 
 # Mac
 *.DS_Store
-
-# Não enviar os currículos da pasta media/user_resume
-media/user_resume/**/*
