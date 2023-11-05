@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="content-section">
+    {% if job_requests %}
+        <legend class="mb-4">Vaga: <a href="{% url 'job-detail' job_requests.0.job.slug %}">{{ job_requests.0.job }}</a></legend>
+    {% endif %}
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th>Candidato</th>
+                <th>Descrição da Vaga</th>
+                <th>Status</th>
+                <th>Currículo</th>
+                <th colspan="2" style="padding-right: 0 !important;">Gerenciar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in job_requests %}
+            <tr>
+                <td>{{ request.candidate.full_name }}</td>
+                <td>{{ request.job }}</td>
+                <td>{{ request.status }}</td>
+                <td><a href="{{ request.resume_url }}" target="_blank">Visualizar</a></td>
+                {% if request.status == "Aprovado" %}
+                    <td><span data-tooltip="Aprovado"><i class="bx bxs-user-check" style="font-size: 20px; color: #3875d7;"></i></span></td>
+                    <td><a href="{% url 'reject-and-delete-request' request.id request.job.slug %}"><span data-tooltip="Rejeitar"><i class="bx bxs-user-x" style="font-size: 21px; color: #e87d7d;"></i></span></a></td>
+                {% else %}
+                    <td><a href="{% url 'accept-status' request.id request.job.slug %}"><span data-tooltip="Aprovar"><i class="bx bxs-user-plus" style="font-size: 21px; color: #3875d7;"></i></span></a></td>
+                    <td><a href="{% url 'reject-and-delete-request' request.id request.job.slug %}"><span data-tooltip="Rejeitar"><i class="bx bxs-user-x" style="font-size: 21px; color: #e87d7d;"></i></span></a></td>
+                {% endif %}
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
+

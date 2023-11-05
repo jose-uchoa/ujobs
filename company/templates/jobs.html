@@ -1,41 +1,56 @@
-{% extends "base.html" %} {% load custom_filters %} {% load humanize %} {% load crispy_forms_tags %} {% block content %}
+{% extends "base.html" %}
+{% load custom_filters %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block content %}
 
 <div class="content-section" style="border-radius: 6px">
-    <legend>Meus Anúncios</legend>
+    <legend class="mb-4">Meus Anúncios</legend>
     <table class="table">
         <thead class="thead-light">
             <tr>
-                <th scope="col">Título</th>
-                <th scope="col">Status</th>
-                <th scope="col">Data de criação</th>
-                <th scope="col">Solicitações</th>
-                <th colspan="2">Ações</th>
+                <th>Descrição da Vaga</th>
+                <th>Status</th>
+                <th>Data de Criação</th>
+                <th>Candidaturas</th>
+                <th colspan="2">Gerenciar</th>
             </tr>
         </thead>
         <tbody>
             {% for job in jobs %}
             <tr>
-                <td>{{ job.title }}</td>
-
-                <td>Em aberto</td>
-
+                <td><a href="{% url 'job-detail' job.slug %}">{{ job.title }}</a></td>
+                <td>
+                    {% with requests_count=job_requests_dict|get_qty_applications_per_user:job.id %}
+                        {% if requests_count != 0 %}
+                            Em progresso
+                        {% else %}
+                            Em aberto
+                        {% endif %}
+                    {% endwith %}
+                </td>
                 <td>{{ job.created_date|custom_naturaltime }}</td>
-                <td>{{ number }} solicitações</td>
-
                 <td>
-                    <a href="{% url 'company-update-job' slug=job.slug %}">
-                        <i class="bx bx-edit" style="font-size: 20px; color: #3875d7; margin-right: -0.75rem"></i>
-                    </a>
+                    {% with requests_count=job_requests_dict|get_qty_applications_per_user:job.id %}
+                        {% if requests_count == 0 %}
+                            Nenhuma candidatura
+                        {% elif requests_count == 1 %}
+                        <a href="{% url 'job-candidates' job.slug %}">
+                            {{ requests_count }} candidatura
+                            </a>
+                        {% else %}
+                        <a href="{% url 'job-candidates' job.slug %}">
+                            {{ requests_count }} candidaturas
+                            </a>
+                        {% endif %}
+                    {% endwith %}
                 </td>
-
-                <td>
-                    <a href="{% url 'company-delete-job' slug=job.slug %}">
-                        <i class="bx bx-trash" style="font-size: 20px; color: #e35f5f"></i>
-                    </a>
-                </td>
+                <td><a href="{% url 'company-update-job' slug=job.slug %}"><span data-tooltip="Atualizar"><i class="bx bx-edit-alt" style="font-size: 20px; color: #3875d7; margin-right: -0.75rem;"></i></span></a></td>
+                <td><a href="{% url 'company-delete-job' slug=job.slug %}"><span data-tooltip="Remover"><i class="bx bx-trash" style="font-size: 19px; color: #e87d7d;"></i></span></a></td>
             </tr>
             {% endfor %}
-        </tbody>
+        </tbody>        
     </table>
 </div>
+
 {% endblock %}
