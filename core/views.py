@@ -104,13 +104,14 @@ def login_request(request):
 def search(request):
     query = request.GET.get("q")
     results = Job.objects.filter(
-        Q(title_icontains=query) | Q(skills_required_icontains=query)
+        Q(title__icontains=query) | Q(skills_required__icontains=query)
     ).all()
 
     if not results:
-        messages.info(request, "Nenhum resultado encontrado")
+        messages.error(request, "Nenhum resultado encontrado")
+        return redirect("home-page")
     else:
-        messages.info(request, f"{results.count()} resultados encontrados")
+        messages.success(request, f"{results.count()} resultados encontrados")
 
     now = datetime.now(timezone.utc)
     for i in results:

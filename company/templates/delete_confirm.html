@@ -1,0 +1,27 @@
+{% extends "base.html" %} {% load custom_filters %} {% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="container mt-5" style="width: 500px">
+    <div class="card p-3" style="border: 1px #e0e0e0 solid; border-radius: 8px">
+        <h5 class="modal-title">
+            <i class="bx bxs-trash"></i>
+            Excluir Anúncio
+        </h5>
+        <hr />
+        <div class="text-center danger-center"><i class="bx bx-x-circle pt-2 pb-4" style="color: #dc3545; font-size: 5rem"></i></div>
+        <div class="text-center danger-center">
+            <span style="color: #dc3545">TEM CERTEZA QUE DESEJA EXCLUIR ESSE ANÚNCIO?</span>
+            <div class="text-dark mt-3 mb-2">Anúncio: <strong>{{ job.title }}</strong></div>
+        </div>
+        <hr />
+        <form method="POST">
+            {% csrf_token %}
+            <input class="btn btn-danger btn-sm" type="submit" value="Excluir" style="float: right; color: #fff !important;"/>
+            <a href="{% url 'company-jobs' %}" class="btn btn-secondary btn-sm mr-3" style="float: right">Cancelar</a>
+        </form>
+    </div>
+    <br />
+    <hr />
+    <span class="text-danger" style="font-size: 15px;">* Se você continuar, esses dados se tornarão irrecuperáveis.</span>
+</div>
+
+{% endblock %}

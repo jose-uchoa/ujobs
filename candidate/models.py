@@ -19,6 +19,7 @@ class CandidateRequests(models.Model):
         User, on_delete=models.CASCADE, related_name="requests"
     )
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    resume_url = models.CharField(max_length=100)
     status = models.CharField(max_length=80, default="Em análise")
 
     def __str__(self):

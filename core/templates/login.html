@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% if messages %} 
+    {% for message in messages %}
+        <div class="col-md-9 mx-auto alert alert-{{ message.tags }}" style="text-align: center; border-radius: 6px">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<div class="content-section col-md-9 mx-auto" style="border-radius: 6px">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4 pb-2">Entrar</legend>
+            {{ form.email|as_crispy_field }}
+
+            <div>
+                {{ form.password|as_crispy_field }}
+                <i
+                    style="position: absolute; top: 53.5%; right: 2rem; color: darkgray; cursor: pointer; font-size: 1.5rem"
+                    id="#id_password"
+                    class="bx bx-show-alt toggle-password"
+                ></i>
+            </div>
+        </fieldset>
+        <div class="form-group pb-2">
+            <button class="btn btn-dark" style="width: 100%" type="submit">Entrar</button>
+        </div>
+    </form>
+    <div class="border-top pt-3 pb-1" style="text-align: center">
+        <small class="text-muted">
+            Não possui cadastro?
+            <a class="ml-1" href="{% url 'register' %}">Registrar-se</a>
+        </small>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordToggleButtons = document.querySelectorAll(".toggle-password");
+
+        function togglePasswordVisibility(e) {
+            const target = document.querySelector(e.currentTarget.getAttribute("id"));
+            if (target.type === "password") {
+                target.type = "text";
+            } else {
+                target.type = "password";
+            }
+        }
+
+        passwordToggleButtons.forEach((button) => {
+            button.addEventListener("click", togglePasswordVisibility);
+        });
+    });
+</script>
+
+{% endblock %}

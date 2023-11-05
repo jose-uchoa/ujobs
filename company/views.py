@@ -156,7 +156,7 @@ def company_delete_job(request, slug):
 
 
 def accepted_status(request, slug):
-    job_request = get_object_or_404(JobRequests, job_slug=slug)
+    job_request = get_object_or_404(JobRequests, job__slug=slug)
     job_request.accepted = True
     job_request.status = "Aceito"  # Defina o status como 'Aceito'
     job_request.save()
@@ -164,7 +164,7 @@ def accepted_status(request, slug):
     # Atualize também o status de aceitação na tabela de
     # solicitações de candidatos a emprego
     candidate_request = job_request.candidate.requests.filter(
-        job_slug=slug,
+        job__slug=slug,
     ).first()
 
     if candidate_request:
@@ -176,13 +176,13 @@ def accepted_status(request, slug):
 
 
 def reject_request(request, slug):
-    job_request = get_object_or_404(JobRequests, job_slug=slug)
+    job_request = get_object_or_404(JobRequests, job__slug=slug)
     job_request.status = "Rejeitado"  # Defina o status como 'Rejeitado'
     job_request.save()
 
     # Atualize também o status de rejeição na tabela de
     # solicitações de candidatos a emprego
-    candidate_request = job_request.candidate.requests.filter(job_slug=slug).first()
+    candidate_request = job_request.candidate.requests.filter(job__slug=slug).first()
     if candidate_request:
         candidate_request.status = "Rejeitado"
         candidate_request.save()
@@ -198,7 +198,7 @@ def hired_status(request, slug):
 
 def delete_request(request, slug):
     # Obtém a solicitação de emprego pelo slug
-    req = get_object_or_404(JobRequests, job_slug=slug)
+    req = get_object_or_404(JobRequests, job__slug=slug)
     req.delete()
 
     messages.success(request, "Solicitação excluída com sucesso.")
@@ -206,7 +206,7 @@ def delete_request(request, slug):
 
 
 def reject_and_delete_request(request, slug):
-    job_request = get_object_or_404(JobRequests, job_slug=slug)
+    job_request = get_object_or_404(JobRequests, job__slug=slug)
 
     # Rejeitar a solicitação
     job_request.accepted = False
@@ -217,7 +217,7 @@ def reject_and_delete_request(request, slug):
 
     # Atualizar também o status de rejeição na tabela de
     # solicitações de candidatos a emprego
-    candidate_request = job_request.candidate.requests.filter(job_slug=slug).first()
+    candidate_request = job_request.candidate.requests.filter(job__slug=slug).first()
     if candidate_request:
         candidate_request.status = "Rejeitado"
         candidate_request.save()
