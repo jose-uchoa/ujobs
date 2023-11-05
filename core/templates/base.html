@@ -32,17 +32,9 @@
             <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
                 <div class="container">
                     <!-- Navbar Brand (on the left) -->
-                    <a class="navbar-brand mr-4" href="{% url 'home-page' %}">ujobs</a>
+                    <a class="navbar-brand mr-4 ml-2" href="{% url 'home-page' %}">ujobs</a>
                     <!-- Navbar Toggler (for responsive behavior) -->
-                    <button
-                        class="navbar-toggler"
-                        type="button"
-                        data-toggle="collapse"
-                        data-target="#navbarToggle"
-                        aria-controls="navbarToggle"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <!-- Navbar Links (on the right) -->
@@ -50,30 +42,30 @@
                         <ul class="navbar-nav">
                             {% if user.is_authenticated %} {% if not user.is_candidate %} {% if user.company.jobs %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-jobs' %}">Anúncios</a>
+                                <a class="nav-link active" href="{% url 'company-jobs' %}">Minhas Vagas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-create-job' %}">Novo</a>
+                                <a class="nav-link" href="{% url 'company-create-job' %}">Publicar Vaga</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-home' %}">Candidaturas</a>
+                                <a class="nav-link" href="{% url 'company-home' %}">Currículos Aceitos</a>
                             </li>
                             {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'company-profile' %}">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                                <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
                             </li>
                             {% endif %} {% if user.is_candidate %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'candidate-requests' %}">Candidaturas</a>
+                                <a class="nav-link" href="{% url 'candidate-requests' %}">Minhas Candidaturas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'candidate-profile' %}">Perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                                <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
                             </li>
                             {% endif %} {% else %}
                             <li class="nav-item">
@@ -90,14 +82,14 @@
         </header>
         <main role="main" class="container pt-1">
             {% if request.path != '/login/' and request.path != '/register/' %} {% if messages %} {% for message in messages %}
-            <div class="col-md-9 mx-auto alert alert-{{ message.tags }}" style="text-align: center; border-radius: 6px">
+            <div class="col-md-10 mx-auto alert alert-{{ message.tags }}" style="text-align: center; border-radius: 6px">
                 {{ message }}
             </div>
             {% endfor %} {% endif %} {% endif %}
 
             <!-- search form -->
             {% if request.path == '/' %}
-            <div class="content-section col-md-9 mx-auto text-center" style="border-radius: 6px; background-color: #343a40">
+            <div class="content-section col-md-10 mx-auto text-center" style="border-radius: 6px; background-color: #343a40">
                 <legend class="mb-4 mt-4" style="color: #fff">Explore o site de vagas de emprego mais completo do Brasil!</legend>
                 <div class="mx-auto mb-4" style="max-width: 70%; border-radius: 6px; padding: 2rem; background-color: #fafafa">
                     <div class="text-left d-grid mb-2">
@@ -116,34 +108,24 @@
                             placeholder="Pesquisar vaga de emprego"
                             required
                         />
-                        <button class="btn btn-dark my-2 my-sm-0" style="border-radius: 4px; width: 8rem" type="submit">
-                            Pesquisar
-                        </button>
+                        <button class="btn btn-dark my-2 my-sm-0" style="border-radius: 4px; width: 8rem" type="submit">Pesquisar</button>
                     </form>
                 </div>
             </div>
             {% endif %}
 
             <div class="row">
-                <div class="col-md-9 mx-auto text-left mt-2">{% block content %}{% endblock %}</div>
+                <div class="col-md-10 mx-auto text-left mt-2">{% block content %}{% endblock %}</div>
             </div>
         </main>
 
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script
-            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"
-        ></script>
-        <script
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"
-        ></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <!-- Script personalizado -->
+        <script src="{% static 'main.js' %}"></script>
+
     </body>
 </html>

@@ -90,7 +90,7 @@ def login_request(request):
                     return redirect("home-page")
                 # if user is a company
                 elif not user.is_candidate:
-                    return redirect("company-home")
+                    return redirect("company-jobs")
             else:
                 messages.error(
                     request,

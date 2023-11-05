@@ -35,6 +35,28 @@ article.media:last-child {
     border-bottom: none !important;
 }
 
+[data-tooltip] {
+    position: absolute;
+    font-size: 10px;
+}
+
+[data-tooltip]:after {
+    display: none;
+    position: absolute;
+    top: -24px;
+    left: -19px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    content: attr(data-tooltip);
+    white-space: nowrap;
+    background-color: #364b6e;
+    color: #fff;
+}
+
+[data-tooltip]:hover:after {
+    display: block;
+}
+
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -71,8 +93,25 @@ textarea::placeholder {
     padding: 0.75rem 0 0.75rem 0;
 }
 
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+ul {
+    padding-top: 4px;
+    gap: 2rem;
+}
+
 .nav-link {
     color: #ced0d1 !important;
+}
+
+.navbar-nav .nav-link i {
+    font-size: 1.2rem;
+    color: inherit; /* Alterado para herdar a cor do link pai */
+    margin: 2px 0 0 4px;
 }
 
 .nav-link:hover {
@@ -89,6 +128,11 @@ textarea::placeholder {
 
 .site-header .navbar-nav .nav-link.active {
     font-weight: 500;
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: 500;
+    color: #fff !important;
 }
 
 .content-section {

@@ -12,7 +12,7 @@
         <div style="text-align: center; width: 8rem">
             {% if user.is_candidate == True or user.is_authenticated == False %}
             <a
-                class="btn btn-secondary"
+                class="btn btn-dark"
                 style="margin-top: 10px; font-size: 14px; padding: 5px 8px 5px 9px"
                 href="{% url 'request-job' job.slug %}"
                 >Enviar Currículo</a

@@ -49,3 +49,8 @@ def custom_naturaltime(value):
         return f"Há {months} meses atrás"
     else:
         return value.strftime("%d/%m/%Y")
+
+
+@register.filter
+def get_qty_applications_per_user(dictionary, key):
+    return dictionary.get(key)

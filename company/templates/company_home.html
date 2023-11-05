@@ -1,54 +1,26 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="content-section" style="border-radius: 6px">
-    <legend class="mb-4">Solicitações</legend>
-    <table class="table table-sm">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Usuário</th>
-                <th scope="col">Anúncio</th>
-                <th scope="col">Currículo</th>
-                <th scope="col">Aprovar</th>
-                <th scope="col">Rejeitar</th>
-            </tr>
-        </thead>
-        {% for request in requests %}
-        <tbody>
-            <tr>
-                <td>{{ request.candidate }}</td>
-                <td><a href="{% url 'job-detail' request.job.slug %}"> {{ request.job }}</a></td>
-                <td>
-                    <a href="{{ request.resume_url }}" target="_blank">Visualizar</a>
-                </td>
-                <td>
-                    <a href="{% url 'accept-status' request.job.slug %}">Aprovar</a>
-                </td>
-                <td>
-                    <a href="{% url 'reject-and-delete-request' request.job.slug %}">Rejeitar</a>
-                </td>
-            </tr>
-        </tbody>
-        {% endfor %}
-    </table>
-</div>
 <div class="content-section">
     <legend class="mb-4">Currículos Aceitos</legend>
-    <table class="table table-sm">
+    <table class="table">
         <thead class="thead-light">
             <tr>
-                <th scope="col">Usuário</th>
-                <th scope="col">Anúncio</th>
-                <th scope="col">Currículo</th>
-                <th colspan="2">Gerenciar</th>
+                <th>Candidato</th>
+                <th>Descrição da Vaga</th>
+                <th>Status</th>
+                <th>Currículo</th>
+                <th colspan="2" style="padding-right: 0 !important;">Gerenciar</th>
             </tr>
         </thead>
         <tbody>
             {% for request in accepted_requests %}
             <tr>
                 <td>{{ request.candidate }}</td>
-                <td><a href="{% url 'job-detail' request.job.slug %}"> {{ request.job }}</a></td>
+                <td><a href="{% url 'job-detail' request.job.slug %}">{{ request.job }}</a></td>
+                <td>Em progresso</td>
                 <td><a href="{{ request.resume_url }}" target="_blank">Visualizar</a></td>
-                <td><a href="{% url 'reject-and-delete-request' request.job.slug %}">Rejeitar</a></td>
+                <td><span data-tooltip="Aprovado"><i class="bx bxs-user-check" style="font-size: 20px; color: #3875d7;"></i></span></td>
+                <td><a href="{% url 'reject-and-delete-request' request.id request.job.slug %}"><span data-tooltip="Rejeitar"><i class="bx bxs-user-x" style="font-size: 21px; color: #e87d7d;"></i></span></a></td>
             </tr>
         </tbody>
         {% endfor %}

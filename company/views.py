@@ -18,8 +18,8 @@ def is_company(user):
         raise Http404
 
 
-@user_passes_test(is_company)
 @login_required
+@user_passes_test(is_company)
 def company_home(request):
     try:
         requests = JobRequests.objects.filter(
@@ -42,8 +42,8 @@ def company_home(request):
     return render(request, "company_home.html", context)
 
 
-@user_passes_test(is_company)
 @login_required
+@user_passes_test(is_company)
 def company_profile(request):
     # Se o usuário já tiver um perfil, mostrar suas informações no formulário
     try:
@@ -82,29 +82,51 @@ def company_profile(request):
     return render(request, "profile.html", {"form": form})
 
 
-@user_passes_test(is_company)
 @login_required
+@user_passes_test(is_company)
 def company_jobs(request):
     # Mostrar todos os empregos publicados pelo empregador/empresa.
     try:
         jobs = request.user.company.jobs.all()
+
         now = datetime.now(timezone.utc)
         for i in jobs:
             get_days = now - i.created_date
             if get_days.days > 1:
                 i.created_date = f"{get_days.days} dias atrás"
-        requests = JobRequests.objects.filter(company=request.user.company)
+
+        # Criar um dicionário para armazenar o número de pedidos de cada trabalho
+        job_requests_dict = {}
+        for job in jobs:
+            job_requests_count = JobRequests.objects.filter(
+                company=request.user.company, job=job
+            ).count()
+            job_requests_dict[job.id] = job_requests_count
+
     except Company.DoesNotExist:
         return redirect("company-home")
+
     return render(
-        request,
-        "jobs.html",
-        {"jobs": jobs, "number": len(requests)},
+        request, "jobs.html", {"jobs": jobs, "job_requests_dict": job_requests_dict}
     )
 
 
-@user_passes_test(is_company)
 @login_required
+@user_passes_test(is_company)
+def job_candidates_view(request, slug):
+    # Obtém o job pelo slug
+    job = get_object_or_404(Job, slug=slug, company=request.user.company)
+
+    # Obtém todas as solicitações de emprego para essa vaga
+    job_requests = JobRequests.objects.filter(job=job)
+
+    return render(
+        request, "job_candidates.html", {"job": job, "job_requests": job_requests}
+    )
+
+
+@login_required
+@user_passes_test(is_company)
 def company_create_job(request):
     # Criar um emprego e publicá-lo no portal.
     try:
@@ -155,10 +177,10 @@ def company_delete_job(request, slug):
     return render(request, "delete_confirm.html", {"job": job})
 
 
-def accepted_status(request, slug):
-    job_request = get_object_or_404(JobRequests, job__slug=slug)
+def accepted_status(request, request_id, slug):
+    job_request = get_object_or_404(JobRequests, id=request_id, job__slug=slug)
     job_request.accepted = True
-    job_request.status = "Aceito"  # Defina o status como 'Aceito'
+    job_request.status = "Aprovado"  # Defina o status como 'Aprovado'
     job_request.save()
 
     # Atualize também o status de aceitação na tabela de
@@ -168,25 +190,17 @@ def accepted_status(request, slug):
     ).first()
 
     if candidate_request:
-        candidate_request.status = "Aceito"
+        candidate_request.status = "Aprovado"
         candidate_request.save()
 
     messages.success(request, "Solicitação aceita com sucesso.")
-    return redirect("company-home")
 
+    # Verifique o referente para determinar a origem
+    referer = request.META.get('HTTP_REFERER', None)
 
-def reject_request(request, slug):
-    job_request = get_object_or_404(JobRequests, job__slug=slug)
-    job_request.status = "Rejeitado"  # Defina o status como 'Rejeitado'
-    job_request.save()
-
-    # Atualize também o status de rejeição na tabela de
-    # solicitações de candidatos a emprego
-    candidate_request = job_request.candidate.requests.filter(job__slug=slug).first()
-    if candidate_request:
-        candidate_request.status = "Rejeitado"
-        candidate_request.save()
-
+    # Verifique se a URL referente corresponde à rota de candidatos para um job específico
+    if referer and f"/company/job/{slug}/candidates/" in referer:
+        return redirect('job-candidates', slug=slug)
     return redirect("company-home")
 
 
@@ -205,8 +219,8 @@ def delete_request(request, slug):
     return redirect("company-home")
 
 
-def reject_and_delete_request(request, slug):
-    job_request = get_object_or_404(JobRequests, job__slug=slug)
+def reject_and_delete_request(request, request_id, slug):
+    job_request = get_object_or_404(JobRequests, id=request_id, job__slug=slug)
 
     # Rejeitar a solicitação
     job_request.accepted = False
@@ -223,4 +237,11 @@ def reject_and_delete_request(request, slug):
         candidate_request.save()
 
     messages.success(request, "Solicitação rejeitada e excluída com sucesso.")
+
+    # Verifique o referente para determinar a origem
+    referer = request.META.get('HTTP_REFERER', None)
+
+    # Verifique se a URL referente corresponde à rota de candidatos para um job específico
+    if referer and f"/company/job/{slug}/candidates/" in referer:
+        return redirect('job-candidates', slug=slug)
     return redirect("company-home")
