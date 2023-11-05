@@ -1,0 +1,58 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="content-section" style="border-radius: 6px">
+    <legend class="mb-4">Solicitações</legend>
+    <table class="table table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Usuário</th>
+                <th scope="col">Anúncio</th>
+                <th scope="col">Currículo</th>
+                <th scope="col">Aprovar</th>
+                <th scope="col">Rejeitar</th>
+            </tr>
+        </thead>
+        {% for request in requests %}
+        <tbody>
+            <tr>
+                <td>{{ request.candidate }}</td>
+                <td><a href="{% url 'job-detail' request.job.slug %}"> {{ request.job }}</a></td>
+                <td>
+                    <a href="{{ request.resume_url }}" target="_blank">Visualizar</a>
+                </td>
+                <td>
+                    <a href="{% url 'accept-status' request.job.slug %}">Aprovar</a>
+                </td>
+                <td>
+                    <a href="{% url 'reject-and-delete-request' request.job.slug %}">Rejeitar</a>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+<div class="content-section">
+    <legend class="mb-4">Currículos Aceitos</legend>
+    <table class="table table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Usuário</th>
+                <th scope="col">Anúncio</th>
+                <th scope="col">Currículo</th>
+                <th colspan="2">Gerenciar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in accepted_requests %}
+            <tr>
+                <td>{{ request.candidate }}</td>
+                <td><a href="{% url 'job-detail' request.job.slug %}"> {{ request.job }}</a></td>
+                <td><a href="{{ request.resume_url }}" target="_blank">Visualizar</a></td>
+                <td><a href="{% url 'reject-and-delete-request' request.job.slug %}">Rejeitar</a></td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

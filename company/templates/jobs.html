@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% load custom_filters %} {% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="content-section" style="border-radius: 6px">
+    <legend>Meus Anúncios</legend>
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Status</th>
+                <th scope="col">Data de criação</th>
+                <th scope="col">Solicitações</th>
+                <th colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.title }}</td>
+
+                <td>Em aberto</td>
+
+                <td>{{ job.created_date|custom_naturaltime }}</td>
+                <td>{{ number }} solicitações</td>
+
+                <td>
+                    <a href="{% url 'company-update-job' slug=job.slug %}">
+                        <i class="bx bx-edit" style="font-size: 20px; color: #3875d7; margin-right: -0.75rem"></i>
+                    </a>
+                </td>
+
+                <td>
+                    <a href="{% url 'company-delete-job' slug=job.slug %}">
+                        <i class="bx bx-trash" style="font-size: 20px; color: #e35f5f"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

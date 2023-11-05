@@ -62,14 +62,19 @@ def request_job(request, slug):
         messages.info(request, "Faça o upload do seu currículo primeiro.")
         return redirect("candidate-profile")
 
-    # Criar a solicitação do usuário para a vaga e enviar a solicitação ao empregador
-    req = CandidateRequests(job=job, requests=request.user)
+    # Criar a solicitação do usuário para a vaga e enviar a 
+    # solicitação ao empregador
+    req = CandidateRequests(
+        job=job,
+        requests=request.user,
+        resume_url=request.user.profile.resume.url,
+    )
     req.save()
     req_to_employer = JobRequests(
         candidate=request.user,
         job=job,
         resume_url=request.user.profile.resume.url,
-        employer=job.company,
+        company=job.company,
     )
     req_to_employer.save()
     messages.success(request, "Seu currículo foi enviado")

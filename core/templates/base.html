@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Bootstrap CSS -->
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+
+        <!-- Blog CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}" />
+
+        <!-- Boxicons -->
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+        {% if title %}
+        <title>{{ title }}</title>
+        {% else %}
+        <title>Portal de Emprego Online</title>
+        {% endif %}
+    </head>
+
+    <body>
+        <!-- Navbar -->
+        <header>
+            <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+                <div class="container">
+                    <!-- Navbar Brand (on the left) -->
+                    <a class="navbar-brand mr-4" href="{% url 'home-page' %}">ujobs</a>
+                    <!-- Navbar Toggler (for responsive behavior) -->
+                    <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarToggle"
+                        aria-controls="navbarToggle"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <!-- Navbar Links (on the right) -->
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarToggle">
+                        <ul class="navbar-nav">
+                            {% if user.is_authenticated %} {% if not user.is_candidate %} {% if user.company.jobs %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'company-jobs' %}">Anúncios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'company-create-job' %}">Novo</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'company-home' %}">Candidaturas</a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'company-profile' %}">Perfil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                            </li>
+                            {% endif %} {% if user.is_candidate %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'candidate-requests' %}">Candidaturas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'candidate-profile' %}">Perfil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                            </li>
+                            {% endif %} {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main role="main" class="container pt-1">
+            {% if request.path != '/login/' and request.path != '/register/' %} {% if messages %} {% for message in messages %}
+            <div class="col-md-9 mx-auto alert alert-{{ message.tags }}" style="text-align: center; border-radius: 6px">
+                {{ message }}
+            </div>
+            {% endfor %} {% endif %} {% endif %}
+
+            <!-- search form -->
+            {% if request.path == '/' %}
+            <div class="content-section col-md-9 mx-auto text-center" style="border-radius: 6px; background-color: #343a40">
+                <legend class="mb-4 mt-4" style="color: #fff">Explore o site de vagas de emprego mais completo do Brasil!</legend>
+                <div class="mx-auto mb-4" style="max-width: 70%; border-radius: 6px; padding: 2rem; background-color: #fafafa">
+                    <div class="text-left d-grid mb-2">
+                        <h6>Que vaga você procura?</h6>
+                        <small style="color: #888">Exemplo: Desenvolvedor Python</small>
+                    </div>
+
+                    <form class="input-group" action="{% url 'search' %}">
+                        <input
+                            style="border-radius: 4px"
+                            name="q"
+                            data-filter="1"
+                            class="form-control mr-sm-1"
+                            type="search"
+                            aria-label="Search"
+                            placeholder="Pesquisar vaga de emprego"
+                            required
+                        />
+                        <button class="btn btn-dark my-2 my-sm-0" style="border-radius: 4px; width: 8rem" type="submit">
+                            Pesquisar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-9 mx-auto text-left mt-2">{% block content %}{% endblock %}</div>
+            </div>
+        </main>
+
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+    </body>
+</html>

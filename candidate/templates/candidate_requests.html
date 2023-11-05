@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block content %}
+<legend class="mb-4">Solicitações Enviadas</legend>
+
+<table class="table table-sm" style="text-align:">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Anúncio</th>
+            <th scope="col">Status</th>
+            <th scope="col">Currículo Enviado</th>
+            <th scope="col">Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td><a href="{% url 'job-detail' request.job.slug %}">{{ request.job }}</a></td>
+            <td>{{ request.status }}</td>
+            <td><a href="{{ request.resume_url }}" target="_blank">Visualizar</a></td>
+            <td><a href="{% url 'cancel-request' request.job.slug %}"><i class="bx bx-trash" style="font-size: 20px; color: #e35f5f"></i></a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
