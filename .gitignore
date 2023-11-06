@@ -163,4 +163,5 @@ cython_debug/
 # Mac
 *.DS_Store
 
-
+# Don't send CVs
+media/user_resume/**/*

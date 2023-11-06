@@ -18,8 +18,8 @@ def is_candidate(user):
         raise Http404
 
 
-@user_passes_test(is_candidate)
 @login_required
+@user_passes_test(is_candidate)
 def candidate_profile(request):
     CandidateProfile.objects.get_or_create(candidate=request.user)
     if request.method == "POST":
