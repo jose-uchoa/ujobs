@@ -40,45 +40,56 @@
                     <!-- Navbar Links (on the right) -->
                     <div class="collapse navbar-collapse justify-content-end" id="navbarToggle">
                         <ul class="navbar-nav">
-                            {% if user.is_authenticated %} {% if not user.is_candidate %} {% if user.company.jobs %}
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{% url 'company-jobs' %}">Minhas Vagas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-create-job' %}">Publicar Vaga</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-home' %}">Currículos Aceitos</a>
-                            </li>
-                            {% endif %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'company-profile' %}">Perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
-                            </li>
-                            {% endif %} {% if user.is_candidate %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'candidate-requests' %}">Minhas Candidaturas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'candidate-profile' %}">Perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
-                            </li>
-                            {% endif %} {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Entrar</a>
-                            </li>
+                            {% if user.is_authenticated %}
+                                {% if not user.is_candidate %}
+                                    {% if user.company.jobs %}
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="{% url 'company-jobs' %}">Minhas Vagas</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'company-create-job' %}">Publicar Vaga</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'company-home' %}">Currículos Aceitos</a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'company-profile' %}">Perfil</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
+                                    </li>
+                                {% else %}
+                                    {% if user.profile.resume %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{% url 'candidate-requests' %}">Minhas Candidaturas</a>
+                                        </li>
+                                    {% else %}
+                                        <style>
+                                            .navbar-brand {
+                                                pointer-events: none !important;
+                                            }
+                                        </style>
+                                    {% endif %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{% url 'candidate-profile' %}">Perfil</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex" href="{% url 'logout' %}">Sair <i class='bx bx-log-out'></i></a>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'register' %}">Cadastro</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+                                </li>
                             {% endif %}
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav>            
         </header>
         <main role="main" class="container pt-1">
             {% if request.path != '/login/' and request.path != '/register/' %} {% if messages %} {% for message in messages %}

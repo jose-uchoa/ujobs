@@ -8,7 +8,7 @@ class UserRegisterForm(UserCreationForm):
     register_choices = (
         ("default", "Selecione uma opção"),
         ("candidate", "Candidato"),
-        ("company", "Empregador"),
+        ("company", "Recrutador"),
     )
     register_as = forms.ChoiceField(
         label="Cadastrar como",

@@ -87,15 +87,18 @@ def login_request(request):
                 login(request, user)
                 # if user is candidate
                 if user.is_candidate:
-                    return redirect("home-page")
+                    # Verificar se o candidato tem currículo associado
+                    profile = getattr(user, "profile", None)
+                    if profile and profile.resume:
+                        return redirect("home-page")
+                    else:
+                        messages.info(request, "Por favor, cadastre seu currículo.")
+                        return redirect("candidate-profile")
                 # if user is a company
                 elif not user.is_candidate:
                     return redirect("company-jobs")
             else:
-                messages.error(
-                    request,
-                    "Nome de usuário ou senha incorretos",
-                )
+                messages.error(request, "Nome de usuário ou senha incorretos")
                 return redirect("login")
     form = UserLoginForm()
     return render(request, "login.html", {"form": form})
